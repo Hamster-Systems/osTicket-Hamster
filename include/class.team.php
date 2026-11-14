@@ -98,6 +98,18 @@ implements TemplateVariable {
         ))->count();
     }
 
+    function getNumSeverityTickets($score) {
+        require_once INCLUDE_DIR . 'class.ticket.php';
+        $flag = Ticket::getSeverityFlag($score);
+        if (!$flag)
+            return 0;
+        return Ticket::objects()->filter(array(
+            'team_id' => $this->getId(),
+            'status__state' => 'open',
+            'flags__hasbit' => $flag,
+        ))->count();
+    }
+
     function getMembers() {
         if (!isset($this->_members)) {
             $this->_members = array();

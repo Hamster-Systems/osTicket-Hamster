@@ -317,6 +317,33 @@ if($_POST && !$errors):
                     __('Correct any errors below and try again.'));
             }
             break;
+        case 'severity':
+            if (!$ticket || !$role->hasPerm(Ticket::PERM_EDIT)) {
+                $errors['err'] = __('Permission Denied. You are not allowed to edit tickets');
+            } elseif (!isset($_POST['severity'])
+                    || (int) $_POST['severity'] < 0
+                    || (int) $_POST['severity'] > 4) {
+                $errors['err'] = __('Select a valid severity');
+            } else {
+                $oldSeverity = $ticket->getSeverityScore();
+                $oldLabel = $ticket->getSeverityLabel();
+                $ticket->setSeverityScore($_POST['severity']);
+                if ($ticket->save()) {
+                    if ($oldSeverity != $ticket->getSeverityScore()) {
+                        $ticket->logEvent('edited', array(
+                            'severity' => array(
+                                $oldLabel,
+                                $ticket->getSeverityLabel(),
+                            ),
+                        ));
+                    }
+                    $msg = __('Ticket severity updated successfully');
+                    $redirect = 'tickets.php?id='.$ticket->getId();
+                } else {
+                    $errors['err'] = __('Unable to update ticket severity');
+                }
+            }
+            break;
         case 'edit':
         case 'update':
             if(!$ticket || !$role->hasPerm(Ticket::PERM_EDIT))

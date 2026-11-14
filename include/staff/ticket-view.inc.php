@@ -351,6 +351,33 @@ if($ticket->isOverdue())
                       <?php } ?>
                 </tr>
                 <tr>
+                    <th><?php echo __('Severity'); ?>:</th>
+                    <td>
+<?php if ($role->hasPerm(Ticket::PERM_EDIT)) { ?>
+                        <form class="severity-form" method="post" action="tickets.php?id=<?php
+                            echo $ticket->getId(); ?>">
+                            <?php csrf_token(); ?>
+                            <input type="hidden" name="do" value="severity">
+                            <select name="severity" class="severity-select severity-<?php
+                                echo $ticket->getSeverityScore() ?: 'none'; ?>"
+                                aria-label="<?php echo __('Ticket severity'); ?>"
+                                onchange="this.form.submit()">
+<?php foreach (Ticket::getSeverityChoices() as $score => $label) { ?>
+                                <option value="<?php echo (int) $score; ?>" <?php
+                                    echo $ticket->getSeverityScore() === (int) $score
+                                        ? 'selected="selected"' : ''; ?>><?php
+                                    echo Format::htmlchars($label); ?></option>
+<?php } ?>
+                            </select>
+                        </form>
+<?php } else { ?>
+                        <span class="severity-badge severity-<?php
+                            echo $ticket->getSeverityScore() ?: 'none'; ?>"><?php
+                            echo Format::htmlchars($ticket->getSeverityLabel()); ?></span>
+<?php } ?>
+                    </td>
+                </tr>
+                <tr>
                     <th><?php echo __('Department');?>:</th>
                     <?php
                     if ($role->hasPerm(Ticket::PERM_TRANSFER)) {?>

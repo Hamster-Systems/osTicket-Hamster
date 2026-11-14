@@ -81,13 +81,14 @@ $qstr .= '&amp;order='.urlencode($order=='DESC' ? 'ASC' : 'DESC');
     <thead>
         <tr>
             <th width="4%">&nbsp;</th>
-            <th width="25%"><a <?php echo $name_sort; ?> href="teams.php?<?php echo $qstr; ?>&sort=name"><?php echo __('Team Name');?></a></th>
+            <th width="20%"><a <?php echo $name_sort; ?> href="teams.php?<?php echo $qstr; ?>&sort=name"><?php echo __('Team Name');?></a></th>
             <th width="8%"><a  <?php echo $status_sort; ?> href="teams.php?<?php echo $qstr; ?>&sort=status"><?php echo __('Status');?></a></th>
             <th width="8%"><a  <?php echo $members_sort; ?>href="teams.php?<?php echo $qstr; ?>&sort=members"><?php echo __('Members');?></a></th>
-            <th width="20%"><a  <?php echo $lead_sort; ?> href="teams.php?<?php echo $qstr; ?>&sort=lead"><?php echo __('Team Lead');?></a></th>
+            <th width="15%"><a  <?php echo $lead_sort; ?> href="teams.php?<?php echo $qstr; ?>&sort=lead"><?php echo __('Team Lead');?></a></th>
             <th width="10%"><?php echo __('Skills / Topics'); ?></th>
             <th width="10%"><?php echo __('Open Work'); ?></th>
-            <th width="15%"><a  <?php echo $updated_sort; ?> href="teams.php?<?php echo $qstr; ?>&sort=updated"><?php echo __('Last Updated');?></a></th>
+            <th width="8%"><?php echo __('SEV-1'); ?></th>
+            <th width="10%"><a  <?php echo $updated_sort; ?> href="teams.php?<?php echo $qstr; ?>&sort=updated"><?php echo __('Last Updated');?></a></th>
         </tr>
     </thead>
     <tbody>
@@ -138,6 +139,8 @@ $qstr .= '&amp;order='.urlencode($order=='DESC' ? 'ASC' : 'DESC');
                     echo $team->getNumRoutingTopics(); ?></a></td>
                 <td><a href="tickets.php?teamid=<?php echo $id; ?>&amp;status=open"
                     class="team-workload"><?php echo $team->getNumOpenTickets(); ?></a></td>
+                <td><a href="tickets.php?teamid=<?php echo $id; ?>&amp;status=open&amp;sev=1"
+                    class="team-sev1-count"><?php echo $team->getNumSeverityTickets(1); ?></a></td>
                 <td><?php echo Format::datetime($team->updated); ?>&nbsp;</td>
             </tr>
             <?php
@@ -145,7 +148,7 @@ $qstr .= '&amp;order='.urlencode($order=='DESC' ? 'ASC' : 'DESC');
         }?>
     <tfoot>
      <tr>
-        <td colspan="7">
+        <td colspan="9">
             <?php if ($count){ ?>
             <?php echo __('Select');?>:&nbsp;
             <a id="selectAll" href="#ckb"><?php echo __('All');?></a>&nbsp;&nbsp;

@@ -122,6 +122,11 @@ implements RestrictedAccess, Threadable, Searchable {
     const FLAG_SEPARATE_THREADS    = 0x0002;
     const FLAG_LINKED              = 0x0008;
     const FLAG_PARENT              = 0x0010;
+    const FLAG_SEV1                = 0x0020;
+    const FLAG_SEV2                = 0x0040;
+    const FLAG_SEV3                = 0x0080;
+    const FLAG_SEV4                = 0x0100;
+    const FLAG_SEVERITY_MASK       = 0x01E0;
 
     static protected $perms = array(
             self::PERM_CREATE => array(
@@ -666,7 +671,51 @@ implements RestrictedAccess, Threadable, Searchable {
             'slaId'     => $this->getSLAId(),
             'user_id'   => $this->getOwnerId(),
             'duedate'   => Misc::db2gmtime($this->getDueDate()),
+            'severity'  => $this->getSeverityScore(),
         );
+    }
+
+    static function getSeverityChoices($includeNone=true) {
+        $choices = array(
+            1 => __('SEV-1 Critical'),
+            2 => __('SEV-2 High'),
+            3 => __('SEV-3 Moderate'),
+            4 => __('SEV-4 Low'),
+        );
+        return $includeNone
+            ? array(0 => __('Unassigned')) + $choices
+            : $choices;
+    }
+
+    static function getSeverityFlag($score) {
+        $flags = array(
+            1 => self::FLAG_SEV1,
+            2 => self::FLAG_SEV2,
+            3 => self::FLAG_SEV3,
+            4 => self::FLAG_SEV4,
+        );
+        return $flags[(int) $score] ?: 0;
+    }
+
+    function getSeverityScore() {
+        foreach (range(1, 4) as $score)
+            if ($this->hasFlag(self::getSeverityFlag($score)))
+                return $score;
+        return 0;
+    }
+
+    function getSeverityLabel() {
+        $choices = self::getSeverityChoices();
+        return $choices[$this->getSeverityScore()];
+    }
+
+    function setSeverityScore($score) {
+        $score = (int) $score;
+        if ($score < 0 || $score > 4)
+            return false;
+        $this->flags = ($this->flags & ~self::FLAG_SEVERITY_MASK)
+            | self::getSeverityFlag($score);
+        return true;
     }
 
     function getLock() {
@@ -3686,6 +3735,7 @@ implements RestrictedAccess, Threadable, Searchable {
         $fields['topicId']  = array('type'=>'int',      'required'=>1, 'error'=>__('Help topic selection is required'));
         $fields['slaId']    = array('type'=>'int',      'required'=>0, 'error'=>__('Select a valid SLA'));
         $fields['duedate']  = array('type'=>'date',     'required'=>0, 'error'=>__('Invalid date format - must be MM/DD/YY'));
+        $fields['severity'] = array('type'=>'int',      'required'=>0, 'error'=>__('Select a valid severity'));
 
         $fields['user_id']  = array('type'=>'int',      'required'=>0, 'error'=>__('Invalid user-id'));
 
@@ -3709,6 +3759,9 @@ implements RestrictedAccess, Threadable, Searchable {
                 && !array_key_exists($vars['source'], Ticket::getSources()))
             $errors['source'] = sprintf( __('Invalid source given - %s'),
                     Format::htmlchars($vars['source']));
+        if (!isset($vars['severity']) || (int) $vars['severity'] < 0
+                || (int) $vars['severity'] > 4)
+            $errors['severity'] = __('Select a valid severity');
 
         $topic = Topic::lookup($vars['topicId']);
         if($topic && !$topic->isActive())
@@ -3735,9 +3788,12 @@ implements RestrictedAccess, Threadable, Searchable {
         // Decide if we need to keep the just selected SLA
         $keepSLA = ($this->getSLAId() != $vars['slaId']);
 
+        $oldSeverity = $this->getSeverityScore();
+        $oldSeverityLabel = $this->getSeverityLabel();
         $this->topic_id = $vars['topicId'];
         $this->sla_id = $vars['slaId'];
         $this->source = $vars['source'];
+        $this->setSeverityScore($vars['severity']);
         $this->duedate = $vars['duedate']
             ? date('Y-m-d H:i:s',Misc::dbtime($vars['duedate']))
             : null;
@@ -3759,6 +3815,11 @@ implements RestrictedAccess, Threadable, Searchable {
                 $changes[$F] = array($old, $this->{$F});
             }
         }
+        if ($oldSeverity != $this->getSeverityScore())
+            $changes['severity'] = array(
+                $oldSeverityLabel,
+                $this->getSeverityLabel(),
+            );
 
         if (!$this->save())
             return false;

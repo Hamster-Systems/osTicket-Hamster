@@ -13,6 +13,15 @@ if (!$ignoreVisibility || //limited visibility
 )
     $tickets->filter($thisstaff->getTicketsVisibility());
 
+// Operational severity filter
+$severityFilter = isset($_GET['sev']) ? (int) $_GET['sev'] : 0;
+if ($severityFilter >= 1 && $severityFilter <= 4) {
+    $tickets->filter(array(
+        'flags__hasbit' => Ticket::getSeverityFlag($severityFilter),
+    ));
+    $args['sev'] = $severityFilter;
+}
+
 // do not show children tickets unless agent is doing a search
 if ($queue->isAQueue() || $queue->isASubQueue())
     $tickets->filter(Q::any(
@@ -83,6 +92,9 @@ if (!$sorted) {
 
 // Apply pagination
 
+if ($severityFilter >= 1 && $severityFilter <= 4)
+    $count = $tickets->count();
+
 $page = (isset($_GET['p']) && is_numeric($_GET['p']))?$_GET['p']:1;
 $pageNav = new Pagenate(PHP_INT_MAX, $page, PAGE_LIMIT);
 $tickets = $pageNav->paginateSimple($tickets);
@@ -132,6 +144,28 @@ $pageNav->setURL('tickets.php', $args);
     <span class="valign-helper"></span>
     <?php
     require 'queue-quickfilter.tmpl.php';
+    ?>
+    <label class="severity-filter-label" for="severity-filter"><?php echo __('Severity'); ?></label>
+    <select id="severity-filter" class="severity-filter" aria-label="<?php echo __('Filter by severity'); ?>">
+        <option value=""><?php echo __('All severities'); ?></option>
+<?php foreach (Ticket::getSeverityChoices(false) as $score => $label) { ?>
+        <option value="<?php echo (int) $score; ?>" <?php
+            echo $severityFilter === (int) $score ? 'selected="selected"' : ''; ?>><?php
+            echo Format::htmlchars($label); ?></option>
+<?php } ?>
+    </select>
+    <script>
+    $('#severity-filter').on('change', function() {
+        var url = new URL(window.location.href);
+        if (this.value)
+            url.searchParams.set('sev', this.value);
+        else
+            url.searchParams.delete('sev');
+        url.searchParams.delete('p');
+        window.location.href = url.toString();
+    });
+    </script>
+    <?php
     if ($queue->getSortOptions())
         require 'queue-sort.tmpl.php';
     ?>

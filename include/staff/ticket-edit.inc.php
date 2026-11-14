@@ -136,6 +136,21 @@ if ($_POST)
             </td>
         </tr>
         <tr>
+            <td width="160"><?php echo __('Severity'); ?>:</td>
+            <td>
+                <select name="severity">
+<?php foreach (Ticket::getSeverityChoices() as $score => $label) { ?>
+                    <option value="<?php echo (int) $score; ?>" <?php
+                        echo (int) $info['severity'] === (int) $score
+                            ? 'selected="selected"' : ''; ?>><?php
+                        echo Format::htmlchars($label); ?></option>
+<?php } ?>
+                </select>
+                <span class="error"><?php echo $errors['severity']; ?></span>
+                <em><?php echo __('Operational impact, separate from customer priority.'); ?></em>
+            </td>
+        </tr>
+        <tr>
             <td width="160">
                 <?php echo __('Due Date');?>:
             </td>
