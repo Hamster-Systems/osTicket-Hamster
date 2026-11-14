@@ -378,6 +378,21 @@ if($ticket->isOverdue())
                     </td>
                 </tr>
                 <tr>
+                    <th><?php echo __('Customer Rating'); ?>:</th>
+                    <td><?php if ($ticket->hasSatisfactionScore()) {
+                        $score = $ticket->getSatisfactionScore(); ?>
+                        <span class="staff-csat" title="<?php echo sprintf(__('%d out of 5'), $score); ?>">
+                            <span aria-hidden="true"><?php echo str_repeat('★', $score)
+                                .str_repeat('☆', 5 - $score); ?></span>
+                            <?php echo sprintf(__('%d/5'), $score); ?>
+                        </span>
+                    <?php } elseif ($ticket->isClosed()) {
+                        echo __('Awaiting feedback');
+                    } else {
+                        echo __('Available after closure');
+                    } ?></td>
+                </tr>
+                <tr>
                     <th><?php echo __('Department');?>:</th>
                     <?php
                     if ($role->hasPerm(Ticket::PERM_TRANSFER)) {?>

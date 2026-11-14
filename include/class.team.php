@@ -110,6 +110,25 @@ implements TemplateVariable {
         ))->count();
     }
 
+    function getSatisfactionStats() {
+        require_once INCLUDE_DIR . 'class.ticket.php';
+        $count = $total = 0;
+        foreach (Ticket::objects()->filter(array(
+                'team_id' => $this->getId(),
+            ))->values_flat('flags') as $flags) {
+            $score = (((int) $flags & Ticket::FLAG_SATISFACTION_MASK)
+                >> Ticket::FLAG_SATISFACTION_SHIFT);
+            if ($score >= 1 && $score <= 5) {
+                $total += $score;
+                ++$count;
+            }
+        }
+        return array(
+            'count' => $count,
+            'average' => $count ? round($total / $count, 1) : null,
+        );
+    }
+
     function getMembers() {
         if (!isset($this->_members)) {
             $this->_members = array();

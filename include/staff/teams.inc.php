@@ -88,6 +88,7 @@ $qstr .= '&amp;order='.urlencode($order=='DESC' ? 'ASC' : 'DESC');
             <th width="10%"><?php echo __('Skills / Topics'); ?></th>
             <th width="10%"><?php echo __('Open Work'); ?></th>
             <th width="8%"><?php echo __('SEV-1'); ?></th>
+            <th width="8%"><?php echo __('CSAT'); ?></th>
             <th width="10%"><a  <?php echo $updated_sort; ?> href="teams.php?<?php echo $qstr; ?>&sort=updated"><?php echo __('Last Updated');?></a></th>
         </tr>
     </thead>
@@ -141,6 +142,12 @@ $qstr .= '&amp;order='.urlencode($order=='DESC' ? 'ASC' : 'DESC');
                     class="team-workload"><?php echo $team->getNumOpenTickets(); ?></a></td>
                 <td><a href="tickets.php?teamid=<?php echo $id; ?>&amp;status=open&amp;sev=1"
                     class="team-sev1-count"><?php echo $team->getNumSeverityTickets(1); ?></a></td>
+                <?php $csat = $team->getSatisfactionStats(); ?>
+                <td><span class="team-csat"><?php echo $csat['count']
+                    ? $csat['average'].'/5' : '—'; ?></span><?php
+                    if ($csat['count']) { ?><small><?php echo sprintf(
+                        _N('%d response', '%d responses', $csat['count']),
+                        $csat['count']); ?></small><?php } ?></td>
                 <td><?php echo Format::datetime($team->updated); ?>&nbsp;</td>
             </tr>
             <?php
@@ -148,7 +155,7 @@ $qstr .= '&amp;order='.urlencode($order=='DESC' ? 'ASC' : 'DESC');
         }?>
     <tfoot>
      <tr>
-        <td colspan="9">
+        <td colspan="10">
             <?php if ($count){ ?>
             <?php echo __('Select');?>:&nbsp;
             <a id="selectAll" href="#ckb"><?php echo __('All');?></a>&nbsp;&nbsp;

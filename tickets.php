@@ -43,6 +43,24 @@ $attachments = $messageField->getWidget()->getAttachments();
 if ($_POST && is_object($ticket) && $ticket->getId()) {
     $errors=array();
     switch(strtolower($_POST['a'])){
+    case 'feedback':
+        $score = (int) $_POST['score'];
+        if ($thisclient->isGuest()
+                || !$ticket->checkUserAccess($thisclient)
+                || $thisclient->getId() != $ticket->getUserId()) {
+            $errors['err'] = __('Only the ticket owner can rate this ticket.');
+        } elseif (!$ticket->isClosed()) {
+            $errors['err'] = __('Tickets can be rated after they are closed.');
+        } elseif ($ticket->hasSatisfactionScore()) {
+            $msg = __('Thank you. This ticket has already been rated.');
+        } elseif ($score < 1 || $score > 5) {
+            $errors['err'] = __('Please select a rating from 1 to 5.');
+        } elseif (!$ticket->setSatisfactionScore($score) || !$ticket->save()) {
+            $errors['err'] = __('Unable to save your rating. Please try again.');
+        } else {
+            $msg = __('Thank you for rating your support experience.');
+        }
+        break;
     case 'close':
         if (!$ticket->checkUserAccess($thisclient)
                 || $thisclient->getId() != $ticket->getUserId()) {

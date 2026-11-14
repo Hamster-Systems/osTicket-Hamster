@@ -127,6 +127,8 @@ implements RestrictedAccess, Threadable, Searchable {
     const FLAG_SEV3                = 0x0080;
     const FLAG_SEV4                = 0x0100;
     const FLAG_SEVERITY_MASK       = 0x01E0;
+    const FLAG_SATISFACTION_MASK   = 0x0E00;
+    const FLAG_SATISFACTION_SHIFT  = 9;
 
     static protected $perms = array(
             self::PERM_CREATE => array(
@@ -715,6 +717,25 @@ implements RestrictedAccess, Threadable, Searchable {
             return false;
         $this->flags = ($this->flags & ~self::FLAG_SEVERITY_MASK)
             | self::getSeverityFlag($score);
+        return true;
+    }
+
+    function getSatisfactionScore() {
+        return (int) (($this->flags & self::FLAG_SATISFACTION_MASK)
+            >> self::FLAG_SATISFACTION_SHIFT);
+    }
+
+    function hasSatisfactionScore() {
+        $score = $this->getSatisfactionScore();
+        return $score >= 1 && $score <= 5;
+    }
+
+    function setSatisfactionScore($score) {
+        $score = (int) $score;
+        if ($score < 1 || $score > 5 || $this->hasSatisfactionScore())
+            return false;
+        $this->flags = ($this->flags & ~self::FLAG_SATISFACTION_MASK)
+            | ($score << self::FLAG_SATISFACTION_SHIFT);
         return true;
     }
 

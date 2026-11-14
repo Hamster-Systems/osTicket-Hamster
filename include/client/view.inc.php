@@ -186,6 +186,38 @@ if ($blockReply = $ticket->isChild() && $ticket->getMergeType() != 'visual')
   ?>
 
 <div class="clear" style="padding-bottom:10px;"></div>
+<?php if ($ticket->isClosed() && !$thisclient->isGuest()
+        && $thisclient->getId() == $ticket->getUserId()) { ?>
+<section class="ticket-feedback" aria-labelledby="feedback-heading">
+    <h2 id="feedback-heading"><?php echo __('How was your support experience?'); ?></h2>
+<?php if ($ticket->hasSatisfactionScore()) {
+    $score = $ticket->getSatisfactionScore(); ?>
+    <p class="feedback-result" role="status"><span aria-hidden="true"><?php
+        echo str_repeat('★', $score).str_repeat('☆', 5 - $score); ?></span>
+        <strong><?php echo sprintf(__('%d out of 5'), $score); ?></strong><br>
+        <?php echo __('Thank you for your feedback.'); ?></p>
+<?php } else { ?>
+    <form method="post" action="tickets.php?id=<?php echo $ticket->getId(); ?>#feedback-heading">
+        <?php csrf_token(); ?>
+        <input type="hidden" name="a" value="feedback">
+        <fieldset>
+            <legend><?php echo __('Rate this ticket from 1 to 5'); ?></legend>
+            <div class="feedback-stars">
+<?php foreach (array(1 => __('Very poor'), __('Poor'), __('Average'), __('Good'), __('Excellent')) as $value => $label) { ?>
+                <input type="radio" id="feedback-<?php echo $value; ?>" name="score"
+                    value="<?php echo $value; ?>" required>
+                <label for="feedback-<?php echo $value; ?>" title="<?php echo Format::htmlchars($label); ?>">
+                    <span aria-hidden="true">★</span><span class="sr-only"><?php
+                        echo sprintf(__('%d - %s'), $value, $label); ?></span>
+                </label>
+<?php } ?>
+            </div>
+        </fieldset>
+        <button class="button primary" type="submit"><?php echo __('Submit Rating'); ?></button>
+    </form>
+<?php } ?>
+</section>
+<?php } ?>
 <?php if($errors['err']) { ?>
     <div id="msg_error" role="alert"><?php echo $errors['err']; ?></div>
 <?php }elseif($msg) { ?>

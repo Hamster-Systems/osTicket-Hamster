@@ -438,3 +438,27 @@ html[data-theme=dark] .ticket-wizard-progress li.is-complete:after,html[data-the
 .portal-support-plan{display:inline-flex;align-items:center;gap:6px;margin-left:10px;padding:5px 9px;border:1px solid rgba(31,93,202,.18);border-radius:999px;background:rgba(255,255,255,.65);color:#344054;font-size:.76rem}.portal-support-plan strong{color:var(--brand)}
 html[data-theme=dark] .portal-support-plan{background:rgba(16,23,32,.45);border-color:#46546a;color:#c6d0dd}html[data-theme=dark] .portal-support-plan strong{color:#9ec1ff}
 @media(max-width:600px){.portal-support-plan{display:flex;width:max-content;margin:9px 0 0}}
+/* Post-closure customer satisfaction */
+.ticket-feedback {
+    margin: 1.25rem 0;
+    padding: 1.25rem;
+    border: 1px solid var(--hs-border, #d7e0ec);
+    border-radius: 14px;
+    background: var(--hs-surface, #fff);
+}
+.ticket-feedback h2 { margin: 0 0 .8rem; }
+.ticket-feedback fieldset { margin: 0 0 1rem; padding: 0; border: 0; }
+.ticket-feedback legend { margin-bottom: .45rem; font-weight: 700; }
+.feedback-stars { display: inline-flex; flex-direction: row-reverse; justify-content: flex-end; gap: .15rem; }
+.feedback-stars input { position: absolute; opacity: 0; pointer-events: none; }
+.feedback-stars label { padding: .2rem; color: #9aa8ba; font-size: 2rem; line-height: 1; cursor: pointer; }
+.feedback-stars label:hover,
+.feedback-stars label:hover ~ label,
+.feedback-stars input:checked ~ label { color: #f59e0b; }
+.feedback-stars input:focus-visible + label { outline: 3px solid #60a5fa; outline-offset: 3px; border-radius: 4px; }
+.feedback-result { margin: 0; color: var(--hs-muted, #52657c); }
+.feedback-result > span { margin-right: .55rem; color: #f59e0b; font-size: 1.5rem; letter-spacing: .08rem; }
+[data-theme="dark"] .ticket-feedback { background: #172231; border-color: #34465c; }
+@media (prefers-color-scheme: dark) {
+    html:not([data-theme="light"]) .ticket-feedback { background: #172231; border-color: #34465c; }
+}
