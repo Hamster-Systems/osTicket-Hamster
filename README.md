@@ -1,3 +1,12 @@
+> [!IMPORTANT]
+> **INFORMATION — HAMSTER SYSTEMS NETWORK CUSTOMISATION**
+>
+> This repository is a **modified osTicket distribution designed and maintained specifically for Hamster Systems and its network**, including its support workflows and operational requirements. It is **not an official upstream osTicket release** and is not presented as a general-purpose deployment maintained for other organisations.
+>
+> This describes the **purpose and support scope** of the customisation, **not a restriction on anyone's rights under the GNU GPL v2**. See [Licensing and attribution](LICENSING.md) and the [original GPL v2 licence text](LICENSE.txt).
+
+---
+
 osTicket
 ========
 <a href="https://osticket.com"><img height="80px" width="80px" src="images/favicon.png"
@@ -94,8 +103,18 @@ Localizing strings in new code requires usage of a [few rules](setup/doc/i18n.md
 
 License
 -------
-osTicket is released under the GPL2 license. See the included LICENSE.txt
-file for the gory details of the General Public License.
+This repository is a Hamster Systems-customised distribution of **osTicket**.
+The underlying osTicket project is distributed under the **GNU General Public
+License, version 2 (GPL v2)**. Hamster Systems' modifications do not remove
+upstream copyright, attribution, or applicable redistribution obligations.
+
+- Read [LICENSING.md](LICENSING.md) for a clear overview of this customised
+  distribution, attribution, and third-party licensing considerations.
+- Read [LICENSE.txt](LICENSE.txt) for the complete, authoritative GNU GPL v2
+  terms (retained unchanged).
+
+The Hamster Systems network-specific purpose of this fork does **not** limit
+the permissions granted by the applicable open-source licences.
 
 osTicket is supported by several magical open source projects including:
 
