@@ -20,6 +20,19 @@ if(isset($_SERVER['SCRIPT_NAME'])
         && !strcasecmp(basename($_SERVER['SCRIPT_NAME']),basename(__FILE__)))
     die('kwaheri rafiki!');
 
+// Canonicalize browser-facing page URLs independently of the web server.
+// Body-carrying methods and path-style endpoints are deliberately untouched.
+if (isset($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'])
+        && in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD'))) {
+    $requestPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    if ($requestPath && substr($requestPath, -4) === '.php') {
+        $query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+        header('Location: '.substr($requestPath, 0, -4)
+            .($query !== null ? '?'.$query : ''), true, 302);
+        exit;
+    }
+}
+
 require('bootstrap.php');
 Bootstrap::loadConfig();
 Bootstrap::defineTables(TABLE_PREFIX);

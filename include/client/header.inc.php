@@ -88,6 +88,7 @@ if (osTicket::is_ie())
     }
     ?>
     <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/portal-theme.js?v=1"></script>
+    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/clean-urls.js?v=1"></script>
 </head>
 <body>
     <a class="skip-link" href="#content"><?php echo __('Skip to main content'); ?></a>

@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# Canonical browser URLs do not expose the implementation extension.
+# Restrict redirects to safe methods so POST bodies and integrations survive.
+RewriteCond %{REQUEST_METHOD} ^(?:GET|HEAD)$
+RewriteCond %{THE_REQUEST} \s/+[^\s?]*\.php(?:[?\s]|$) [NC]
+RewriteRule ^(.+)\.php$ $1 [R=302,L,NE]
+
+# Resolve extensionless application pages to their existing PHP scripts.
+# Real files/directories and path-style API/AJAX routes continue untouched.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/$1.php -f
+RewriteRule ^(.+?)/?$ $1.php [L,QSA]
+</IfModule>

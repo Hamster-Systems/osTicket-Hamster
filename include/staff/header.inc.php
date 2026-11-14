@@ -59,6 +59,7 @@ if (osTicket::is_ie())
         echo "\n\t".implode("\n\t", $headers)."\n";
     }
     ?>
+    <script type="text/javascript" src="<?php echo ROOT_PATH; ?>js/clean-urls.js?v=1"></script>
 </head>
 <body>
 <div id="container">
