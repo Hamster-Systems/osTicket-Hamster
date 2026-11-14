@@ -159,6 +159,7 @@ class StaffNav {
                     break;
                 case 'dashboard':
                     $subnav[]=array('desc'=>__('Dashboard'),'href'=>'dashboard.php','iconclass'=>'logs');
+                    $subnav[]=array('desc'=>__('Staff Operations'),'href'=>'staff-operations.php','iconclass'=>'teams');
                     $subnav[]=array('desc'=>__('Agent Directory'),'href'=>'directory.php','iconclass'=>'teams');
                     $subnav[]=array('desc'=>__('My Profile'),'href'=>'profile.php','iconclass'=>'users');
                     break;

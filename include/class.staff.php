@@ -657,7 +657,29 @@ implements AuthenticatedUser, EmailContact, TemplateVariable, Searchable {
     }
 
     function isAvailable() {
-        return ($this->isActive() && !$this->onVacation());
+        global $cfg;
+        if (!$this->isActive() || $this->onVacation())
+            return false;
+        $status = $this->get('availability_status', 'available');
+        $until = $this->get('availability_until');
+        if ($status != 'available' && (!$until || strtotime($until) >= time()))
+            return false;
+
+        if (($encoded = $this->get('work_schedule'))
+                && ($schedule = json_decode($encoded, true))) {
+            try {
+                $zone = new DateTimeZone($this->getTimezone()
+                    ?: $cfg->getTimezone() ?: 'UTC');
+                $now = new DateTime('now', $zone);
+                $day = strtolower($now->format('D'));
+                $time = $now->format('H:i');
+                if (isset($schedule[$day]) && (!$schedule[$day]['enabled']
+                        || $time < $schedule[$day]['start']
+                        || $time >= $schedule[$day]['end']))
+                    return false;
+            } catch (Exception $e) {}
+        }
+        return true;
     }
 
     function showAssignedOnly() {
