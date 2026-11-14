@@ -62,6 +62,10 @@ Do not remove original author acknowledgements, third-party notices or relevant 
 
 This fork is built around the specific needs of **Hamster Systems and its network**. Changes, integrations and configurations may not be suitable for other environments without additional testing or adaptation.
 
+**Support policy for external users:** Hamster Systems' support and maintenance efforts are primarily directed towards deployments across its own network. **We do not provide a guarantee of comprehensive support for third-party installations**. This includes setup or migration assistance, individual troubleshooting, compatibility testing, feature requests, security or bug fixes, and ongoing updates. Issues and contributions may be reviewed at our discretion, but submitting a request does not create an obligation to respond, provide a fix or meet a particular timeframe.
+
+Others remain free to use and maintain the GPL-covered software under the applicable licence. **This support policy is not an additional restriction on those rights** and does not alter the warranty provisions in the [GPL v2 licence](LICENSE.txt).
+
 For general osTicket documentation and upstream releases, refer to the [original project](https://github.com/osTicket/osTicket). Questions or corrections concerning this customised repository can be raised through its [GitHub issues](https://github.com/Hamster-Systems/osTicket-Hamster/issues).
 
 ## Warranty and authoritative terms
