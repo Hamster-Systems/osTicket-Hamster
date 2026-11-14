@@ -1,4 +1,4 @@
-> [!IMPORTANT]
+> [!NOTE]
 > **INFORMATION — HAMSTER SYSTEMS NETWORK CUSTOMISATION**
 >
 > This repository is a **modified osTicket distribution designed and maintained specifically for Hamster Systems and its network**, including its support workflows and operational requirements. It is **not an official upstream osTicket release** and is not presented as a general-purpose deployment maintained for other organisations.
