@@ -9,9 +9,20 @@ Signal::send('object.view', $ticket, $type);
 $dept = $ticket->getDept();
 $status = $ticket->getStatus();
 $statusState = $ticket->isClosed() ? 'closed' : 'open';
-$statusDetail = $ticket->isClosed()
+$statusName = $status ? $status->getLocalName() : '';
+$statusSlug = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($statusName)), '-');
+$statusDetails = array(
+    'new' => __('Received and awaiting triage'),
+    'open' => __('Queued with the support team'),
+    'in-progress' => __('Actively being worked on'),
+    'awaiting-customer' => __('Waiting for your response'),
+    'escalated' => __('Escalated for priority attention'),
+    'resolved' => __('A solution has been provided'),
+    'closed' => __('This request is complete'),
+);
+$statusDetail = $statusDetails[$statusSlug] ?: ($ticket->isClosed()
     ? __('Closed')
-    : ($ticket->isAnswered() ? __('Awaiting your reply') : __('Awaiting support'));
+    : ($ticket->isAnswered() ? __('Awaiting your reply') : __('Awaiting support')));
 
 if ($ticket->isClosed() && !$ticket->isReopenable())
     $warn = sprintf(__('%s is marked as closed and cannot be reopened.'), __('This ticket'));
@@ -91,7 +102,7 @@ if ($thisclient && $thisclient->isGuest()
                 <tr>
                     <th width="100"><?php echo __('Ticket Status');?>:</th>
                     <td>
-                        <span class="ticket-status ticket-status-<?php echo $statusState; ?>">
+                        <span class="ticket-status ticket-status-<?php echo $statusState; ?> ticket-status-<?php echo Format::htmlchars($statusSlug); ?>">
                             <span class="status-dot" aria-hidden="true"></span>
                             <?php echo $status ? Format::htmlchars($status->getLocalName()) : ''; ?>
                         </span>

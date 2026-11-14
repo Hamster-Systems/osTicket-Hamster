@@ -401,12 +401,24 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .ticket-status{display:inline-flex;align-items:center;gap:7px;padding:5px 10px;border-radius:999px;font-size:.82rem;font-weight:750}
 .ticket-status .status-dot{width:8px;height:8px;border-radius:50%;background:currentColor}
 .ticket-status-open{background:#e9f8f1;color:#087a55}.ticket-status-closed{background:#eef1f5;color:#475467}
+.dashboard-status.status-new,.ticket-status-new{background:#e8f1ff;color:#1859b8}
+.dashboard-status.status-open,.ticket-status-open{background:#e9f8f1;color:#087a55}
+.dashboard-status.status-in-progress,.ticket-status-in-progress{background:#fff4d6;color:#8a5800}
+.dashboard-status.status-awaiting-customer,.ticket-status-awaiting-customer{background:#f3e8ff;color:#7534a8}
+.dashboard-status.status-escalated,.ticket-status-escalated{background:#ffe8e8;color:#b42318}
+.dashboard-status.status-resolved,.ticket-status-resolved{background:#e7f8ef;color:#067647}
+.dashboard-status.status-closed,.ticket-status-closed{background:#eef1f5;color:#475467}
 .ticket-status-detail{display:block;margin-top:5px;color:var(--muted);font-size:.78rem}
 .ticket-status-action{display:inline-block;margin:0 0 0 6px}
 #ticketInfo .ticket-status-action .action-button{margin-left:0;cursor:pointer;font-family:inherit}
 #ticketInfo .status-action-close{color:#a83939}#ticketInfo .status-action-reopen{color:#087a55}
 html[data-theme=dark] .ticket-status-open{background:#153b31;color:#73e0b8}
 html[data-theme=dark] .ticket-status-closed{background:#293443;color:#c1ccda}
+html[data-theme=dark] .ticket-status-new,html[data-theme=dark] .dashboard-status.status-new{background:#193552;color:#9bc7ff}
+html[data-theme=dark] .ticket-status-in-progress,html[data-theme=dark] .dashboard-status.status-in-progress{background:#453617;color:#ffd477}
+html[data-theme=dark] .ticket-status-awaiting-customer,html[data-theme=dark] .dashboard-status.status-awaiting-customer{background:#39234d;color:#d9adff}
+html[data-theme=dark] .ticket-status-escalated,html[data-theme=dark] .dashboard-status.status-escalated{background:#4a2428;color:#ffaaa5}
+html[data-theme=dark] .ticket-status-resolved,html[data-theme=dark] .dashboard-status.status-resolved{background:#173b31;color:#7de0ba}
 html[data-theme=dark] #ticketInfo .status-action-close{color:#ffb4b4!important}
 html[data-theme=dark] #ticketInfo .status-action-reopen{color:#86e7c2!important}
 @media(max-width:700px){.ticket-status-action{margin:0 6px 0 0}}

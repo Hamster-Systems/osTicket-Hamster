@@ -250,7 +250,9 @@ if ($closedTickets) {?>
                     href="tickets.php?id=<?php echo $T['ticket_id']; ?>"><?php echo $ticketNumber; ?></a>
                 </td>
                 <td><?php echo Format::date($T['created']); ?></td>
-                <td><?php echo $status; ?></td>
+                <?php $statusSlug = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($status)), '-'); ?>
+                <td><span class="ticket-status ticket-status-<?php echo Format::htmlchars($statusSlug); ?>">
+                    <span class="status-dot" aria-hidden="true"></span><?php echo $status; ?></span></td>
                 <td>
                   <?php if ($isCollab) {?>
                     <div style="max-height: 1.2em; max-width: 320px;" class="link truncate" href="tickets.php?id=<?php echo $T['ticket_id']; ?>"><i class="icon-group"></i> <?php echo $subject; ?></div>

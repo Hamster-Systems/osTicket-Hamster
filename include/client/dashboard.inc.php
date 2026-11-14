@@ -56,7 +56,8 @@ $dashboard_recent = Ticket::objects()->filter(array("user_id" => $thisclient->ge
                         <strong><?php echo Format::htmlchars($ticket['cdata__subject'] ?: __('Support request')); ?></strong>
                         <small>#<?php echo Format::htmlchars($ticket['number']); ?> &middot; <?php echo Format::date($ticket['created']); ?></small>
                     </span>
-                    <span class="dashboard-status status-<?php echo Format::htmlchars(strtolower($ticket['status__state'])); ?>"><?php echo Format::htmlchars($ticket['status__name']); ?></span>
+                    <?php $statusSlug = preg_replace('/[^a-z0-9]+/', '-', strtolower($ticket['status__name'])); ?>
+                    <span class="dashboard-status status-<?php echo Format::htmlchars(strtolower($ticket['status__state'])); ?> status-<?php echo Format::htmlchars(trim($statusSlug, '-')); ?>"><?php echo Format::htmlchars($ticket['status__name']); ?></span>
                 </a>
                 <?php } ?>
             </div>
