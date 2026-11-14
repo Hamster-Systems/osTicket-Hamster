@@ -3,6 +3,8 @@
 >
 > This repository is a **modified osTicket distribution designed and maintained specifically for Hamster Systems and its network**, including its support workflows and operational requirements. It is **not an official upstream osTicket release** and is not presented as a general-purpose deployment maintained for other organisations.
 >
+> **Support notice:** Hamster Systems primarily maintains and supports this fork for its own network. We **do not guarantee full technical support, installation assistance, troubleshooting, updates or fixes for third-party deployments**. External requests may be considered at our discretion, without any commitment to respond or resolve them.
+>
 > This describes the **purpose and support scope** of the customisation, **not a restriction on anyone's rights under the GNU GPL v2**. See [Licensing and attribution](LICENSING.md) and the [original GPL v2 licence text](LICENSE.txt).
 
 ---
