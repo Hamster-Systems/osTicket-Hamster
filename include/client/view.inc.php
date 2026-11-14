@@ -7,6 +7,11 @@ $type = array('type' => 'viewed');
 Signal::send('object.view', $ticket, $type);
 
 $dept = $ticket->getDept();
+$status = $ticket->getStatus();
+$statusState = $ticket->isClosed() ? 'closed' : 'open';
+$statusDetail = $ticket->isClosed()
+    ? __('Closed')
+    : ($ticket->isAnswered() ? __('Awaiting your reply') : __('Awaiting support'));
 
 if ($ticket->isClosed() && !$ticket->isReopenable())
     $warn = sprintf(__('%s is marked as closed and cannot be reopened.'), __('This ticket'));
@@ -50,6 +55,27 @@ if ($thisclient && $thisclient->isGuest()
                 <a class="action-button" href="tickets.php?a=edit&id=<?php
                      echo $ticket->getId(); ?>"><i class="icon-edit"></i> <?php echo __('Edit'); ?></a>
 <?php } ?>
+<?php if (!$thisclient->isGuest()
+        && $thisclient->getId() == $ticket->getUserId()) { ?>
+    <form class="ticket-status-action" method="post"
+        action="tickets.php?id=<?php echo $ticket->getId(); ?>"
+        aria-label="<?php echo $ticket->isClosed()
+            ? __('Reopen this ticket') : __('Close this ticket'); ?>">
+        <?php csrf_token(); ?>
+        <input type="hidden" name="id" value="<?php echo $ticket->getId(); ?>">
+        <input type="hidden" name="a" value="<?php echo $ticket->isClosed() ? 'reopen' : 'close'; ?>">
+        <?php if (!$ticket->isClosed() || $ticket->isReopenable()) { ?>
+        <button type="submit" class="action-button status-action-<?php
+            echo $ticket->isClosed() ? 'reopen' : 'close'; ?>"
+            data-confirm="<?php echo Format::htmlchars($ticket->isClosed()
+                ? __('Reopen this ticket?')
+                : __('Close this ticket? You can reopen it later if permitted.')); ?>">
+            <i class="<?php echo $ticket->isClosed() ? 'icon-undo' : 'icon-ok'; ?>" aria-hidden="true"></i>
+            <?php echo $ticket->isClosed() ? __('Reopen') : __('Close'); ?>
+        </button>
+        <?php } ?>
+    </form>
+<?php } ?>
 </div>
             </h1>
         </td>
@@ -64,7 +90,13 @@ if ($thisclient && $thisclient->isGuest()
                 </thead>
                 <tr>
                     <th width="100"><?php echo __('Ticket Status');?>:</th>
-                    <td><?php echo ($S = $ticket->getStatus()) ? $S->getLocalName() : ''; ?></td>
+                    <td>
+                        <span class="ticket-status ticket-status-<?php echo $statusState; ?>">
+                            <span class="status-dot" aria-hidden="true"></span>
+                            <?php echo $status ? Format::htmlchars($status->getLocalName()) : ''; ?>
+                        </span>
+                        <span class="ticket-status-detail"><?php echo $statusDetail; ?></span>
+                    </td>
                 </tr>
                 <tr>
                     <th><?php echo __('Department');?>:</th>
@@ -155,11 +187,11 @@ if ($blockReply = $ticket->isChild() && $ticket->getMergeType() != 'visual')
 
 <div class="clear" style="padding-bottom:10px;"></div>
 <?php if($errors['err']) { ?>
-    <div id="msg_error"><?php echo $errors['err']; ?></div>
+    <div id="msg_error" role="alert"><?php echo $errors['err']; ?></div>
 <?php }elseif($msg) { ?>
-    <div id="msg_notice"><?php echo $msg; ?></div>
+    <div id="msg_notice" role="status"><?php echo $msg; ?></div>
 <?php }elseif($warn) { ?>
-    <div id="msg_warning"><?php echo $warn; ?></div>
+    <div id="msg_warning" role="status"><?php echo $warn; ?></div>
 <?php }
 if ((!$ticket->isClosed() || $ticket->isReopenable()) && !$blockReply) { ?>
 <form id="reply" action="tickets.php?id=<?php echo $ticket->getId();
@@ -212,4 +244,12 @@ foreach (AttachmentFile::objects()->filter(array(
     );
 } ?>
 showImagesInline(<?php echo JsonDataEncoder::encode($urls); ?>);
+</script>
+<script>
+$(function() {
+    $('.ticket-status-action button[data-confirm]').on('click', function(event) {
+        if (!window.confirm($(this).attr('data-confirm')))
+            event.preventDefault();
+    });
+});
 </script>

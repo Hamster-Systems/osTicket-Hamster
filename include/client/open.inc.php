@@ -31,8 +31,11 @@ if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
 }
 
 ?>
-<h1><?php echo __('Open a New Ticket');?></h1>
-<p><?php echo __('Please fill in the form below to open a new ticket.');?></p>
+<div class="ticket-form-intro">
+    <span class="dashboard-eyebrow"><?php echo __('New support request'); ?></span>
+    <h1><?php echo __('Open a New Ticket'); ?></h1>
+    <p><?php echo __('Tell us what you need help with and our support team will get back to you.'); ?></p>
+</div>
 <form id="ticketForm" method="post" action="open.php" enctype="multipart/form-data">
   <?php csrf_token(); ?>
   <input type="hidden" name="a" value="open">
@@ -55,12 +58,12 @@ if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
     <tbody>
     <tr><td colspan="2"><hr />
         <div class="form-header" style="margin-bottom:0.5em">
-        <b><?php echo __('Help Topic'); ?></b>
+        <label for="topicId"><b><?php echo __('Help Topic'); ?></b></label>
         </div>
     </td></tr>
     <tr>
         <td colspan="2">
-            <select id="topicId" name="topicId" onchange="javascript:
+            <select id="topicId" name="topicId" required aria-required="true" onchange="javascript:
                     var data = $(':input[name]', '#dynamic-form').serialize();
                     $.ajax(
                       'ajax.php/form/help-topic/' + this.value,
@@ -101,7 +104,7 @@ if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
     <tr class="captchaRow">
         <td class="required"><?php echo __('CAPTCHA Text');?>:</td>
         <td>
-            <span class="captcha"><img src="captcha.php" border="0" align="left"></span>
+            <span class="captcha"><img src="captcha.php" border="0" align="left" alt="<?php echo __('CAPTCHA verification image'); ?>"></span>
             &nbsp;&nbsp;
             <input id="captcha" type="text" name="captcha" size="6" autocomplete="off">
             <em><?php echo __('Enter the text shown on the image.');?></em>

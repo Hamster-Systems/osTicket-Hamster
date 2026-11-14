@@ -15,18 +15,23 @@ if ($content) {
 }
 
 ?>
-<h1><?php echo Format::display($title); ?></h1>
-<p><?php echo Format::display($body); ?></p>
+<div class="login-page-intro">
+    <span class="dashboard-eyebrow"><?php echo __('Secure customer portal'); ?></span>
+    <h1><?php echo Format::display($title); ?></h1>
+    <p><?php echo Format::display($body); ?></p>
+</div>
 <form action="login.php" method="post" id="clientLogin">
     <?php csrf_token(); ?>
 <div style="display:table-row">
     <div class="login-box">
-    <strong><?php echo Format::htmlchars($errors['login']); ?></strong>
+    <strong<?php if ($errors['login']) echo ' role="alert"'; ?>><?php echo Format::htmlchars($errors['login']); ?></strong>
     <div>
-        <input id="username" placeholder="<?php echo __('Email or Username'); ?>" type="text" name="luser" size="30" value="<?php echo $email; ?>" class="nowarn">
+        <label class="sr-only" for="username"><?php echo __('Email or Username'); ?></label>
+        <input id="username" placeholder="<?php echo __('Email or Username'); ?>" type="text" name="luser" size="30" value="<?php echo $email; ?>" class="nowarn" autocomplete="username" required>
     </div>
     <div>
-        <input id="passwd" placeholder="<?php echo __('Password'); ?>" type="password" name="lpasswd" size="30" maxlength="128" value="<?php echo $passwd; ?>" class="nowarn"></td>
+        <label class="sr-only" for="passwd"><?php echo __('Password'); ?></label>
+        <input id="passwd" placeholder="<?php echo __('Password'); ?>" type="password" name="lpasswd" size="30" maxlength="128" value="<?php echo $passwd; ?>" class="nowarn" autocomplete="current-password" required>
     </div>
     <p>
         <input class="btn" type="submit" value="<?php echo __('Sign In'); ?>">

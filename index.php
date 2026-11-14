@@ -20,6 +20,10 @@ require_once INCLUDE_DIR . 'class.page.php';
 $section = 'home';
 require(CLIENTINC_DIR.'header.inc.php');
 ?>
+<?php if ($thisclient && $thisclient->isValid() && !$thisclient->isGuest()) {
+    require_once INCLUDE_DIR . 'class.ticket.php';
+    include CLIENTINC_DIR . 'dashboard.inc.php';
+} else { ?>
 <div id="landing_page">
 <?php include CLIENTINC_DIR.'templates/sidebar.tmpl.php'; ?>
 <div class="main-content">
@@ -79,4 +83,5 @@ if ($cats->all()) { ?>
 </div>
 </div>
 
-<?php require(CLIENTINC_DIR.'footer.inc.php'); ?>
+<?php }
+require(CLIENTINC_DIR.'footer.inc.php'); ?>

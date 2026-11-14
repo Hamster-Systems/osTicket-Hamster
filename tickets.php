@@ -43,6 +43,33 @@ $attachments = $messageField->getWidget()->getAttachments();
 if ($_POST && is_object($ticket) && $ticket->getId()) {
     $errors=array();
     switch(strtolower($_POST['a'])){
+    case 'close':
+        if (!$ticket->checkUserAccess($thisclient)
+                || $thisclient->getId() != $ticket->getUserId()) {
+            $errors['err'] = __('Only the ticket owner can close this ticket.');
+        } elseif ($ticket->isClosed()) {
+            $msg = __('This ticket is already closed.');
+        } elseif (!$ticket->setStatus('closed', '', $errors, false)) {
+            if (!$errors['err'])
+                $errors['err'] = __('Unable to close the ticket. Please try again.');
+        } else {
+            $msg = __('Ticket closed successfully.');
+        }
+        break;
+    case 'reopen':
+        if (!$ticket->checkUserAccess($thisclient)
+                || $thisclient->getId() != $ticket->getUserId()) {
+            $errors['err'] = __('Only the ticket owner can reopen this ticket.');
+        } elseif (!$ticket->isClosed()) {
+            $msg = __('This ticket is already open.');
+        } elseif (!$ticket->isReopenable()) {
+            $errors['err'] = __('This ticket cannot be reopened.');
+        } elseif (!$ticket->reopen()) {
+            $errors['err'] = __('Unable to reopen the ticket. Please try again.');
+        } else {
+            $msg = __('Ticket reopened successfully.');
+        }
+        break;
     case 'edit':
         if(!$ticket->checkUserAccess($thisclient) //double check perm again!
                 || $thisclient->getId() != $ticket->getUserId())
