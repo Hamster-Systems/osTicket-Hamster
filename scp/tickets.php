@@ -68,6 +68,18 @@ if (!$ticket) {
         $queue_id = "adhoc,uid";
     }
     // Search for organization tickets
+    elseif (isset($_GET['teamid'])
+        && ($filterTeam = Team::lookup($_GET['teamid']))
+    ) {
+        $criteria = [
+            ['team_id', 'equal', $filterTeam->getId()],
+        ];
+        if ($S = $_GET['status'])
+            $criteria[] = ['status__state', 'includes', [$S => $S]];
+        $_SESSION['advsearch']['teamid'] = $criteria;
+        $queue_id = "adhoc,teamid";
+    }
+    // Search for customer-group tickets
     elseif (isset($_GET['orgid'])
         && ($org = Organization::lookup($_GET['orgid']))
     ) {

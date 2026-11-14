@@ -54,7 +54,7 @@ $qstr.='&amp;order='.($order=='-' ? 'ASC' : 'DESC');
 //echo $query;
 $_SESSION[':Q:orgs'] = $orgs;
 
-$orgs->values('id', 'name', 'created', 'updated');
+$orgs->values('id', 'name', 'manager', 'extra', 'created', 'updated');
 $orgs->order_by($order . $order_column);
 ?>
 <div id="basic_search">
@@ -75,14 +75,14 @@ $orgs->order_by($order . $order_column);
     <div class="sticky bar opaque">
         <div class="content">
             <div class="pull-left flush-left">
-                <h2><?php echo __('Organizations'); ?></h2>
+                <h2><?php echo __('Customer Groups'); ?></h2>
             </div>
             <div class="pull-right">
                 <?php if ($thisstaff->hasPerm(Organization::PERM_CREATE)) { ?>
                 <a class="green button action-button add-org"
                    href="#">
                     <i class="icon-plus-sign"></i>
-                    <?php echo __('Add Organization'); ?>
+                    <?php echo __('Add Customer Group'); ?>
                 </a>
                 <?php }
             if ($thisstaff->hasPerm(Organization::PERM_DELETE)) { ?>
@@ -121,16 +121,19 @@ else
     <thead>
         <tr>
             <th nowrap width="4%">&nbsp;</th>
-            <th width="45%"><a <?php echo $name_sort; ?> href="orgs.php?<?php echo $qstr; ?>&sort=name"><?php echo __('Name'); ?></a></th>
-            <th width="11%"><a <?php echo $users_sort; ?> href="orgs.php?<?php echo $qstr; ?>&sort=users"><?php echo __('Users'); ?></a></th>
-            <th width="20%"><a <?php echo $create_sort; ?> href="orgs.php?<?php echo $qstr; ?>&sort=create"><?php echo __('Created'); ?></a></th>
-            <th width="20%"><a <?php echo $update_sort; ?> href="orgs.php?<?php echo $qstr; ?>&sort=update"><?php echo __('Last Updated'); ?></a></th>
+            <th width="28%"><a <?php echo $name_sort; ?> href="orgs.php?<?php echo $qstr; ?>&sort=name"><?php echo __('Customer Group'); ?></a></th>
+            <th width="8%"><a <?php echo $users_sort; ?> href="orgs.php?<?php echo $qstr; ?>&sort=users"><?php echo __('Users'); ?></a></th>
+            <th width="12%"><?php echo __('Tier'); ?></th>
+            <th width="22%"><?php echo __('Routing'); ?></th>
+            <th width="15%"><?php echo __('SLA'); ?></th>
+            <th width="15%"><a <?php echo $update_sort; ?> href="orgs.php?<?php echo $qstr; ?>&sort=update"><?php echo __('Last Updated'); ?></a></th>
         </tr>
     </thead>
     <tbody>
     <?php
         $ids=($errors && is_array($_POST['ids']))?$_POST['ids']:null;
         foreach ($orgs as $org) {
+            $group = Organization::lookup($org['id']);
 
             $sel=false;
             if($ids && in_array($org['id'], $ids))
@@ -143,7 +146,14 @@ else
             <td>&nbsp; <a href="orgs.php?id=<?php echo $org['id']; ?>"><?php
             echo $org['name']; ?></a> </td>
             <td>&nbsp;<?php echo $org['user_count']; ?></td>
-            <td><?php echo Format::date($org['created']); ?></td>
+            <td><span class="customer-tier customer-tier-<?php
+                echo Format::htmlchars($group->getSupportTier()); ?>"><?php
+                echo Format::htmlchars($group->getSupportTierLabel()); ?></span></td>
+            <td><?php echo Format::htmlchars((string) $group->getAccountManager() ?: __('Not configured')); ?></td>
+            <td><?php
+                echo ($groupSla = SLA::lookup($group->getGroupSLAId()))
+                    ? Format::htmlchars($groupSla->getName())
+                    : __('Default'); ?></td>
             <td><?php echo Format::datetime($org['updated']); ?>&nbsp;</td>
            </tr>
         <?php

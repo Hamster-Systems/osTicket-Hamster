@@ -57,6 +57,19 @@ if(!defined('OSTSCPINC') || !$thisstaff || !is_object($org)) die('Invalid path')
                     <th><?php echo __('Account Manager'); ?>:</th>
                     <td><?php echo $org->getAccountManager(); ?>&nbsp;</td>
                 </tr>
+                <tr>
+                    <th><?php echo __('Customer Group'); ?>:</th>
+                    <td><span class="customer-tier customer-tier-<?php
+                        echo Format::htmlchars($org->getSupportTier()); ?>"><?php
+                        echo Format::htmlchars($org->getSupportTierLabel()); ?></span></td>
+                </tr>
+                <tr>
+                    <th><?php echo __('Default SLA'); ?>:</th>
+                    <td><?php
+                        echo ($groupSla = SLA::lookup($org->getGroupSLAId()))
+                            ? Format::htmlchars($groupSla->getName())
+                            : __('System or Help Topic Default'); ?></td>
+                </tr>
             </table>
         </td>
         <td width="50%" style="vertical-align:top">

@@ -350,6 +350,24 @@ $info=Format::htmlchars(($errors && $_POST)?$_POST:$info, true);
 </div>
 
 <div class="hidden tab_content" id="forms">
+ <?php
+ $form_return = !empty($info['id'])
+    ? 'helptopics.php?id='.(int) $info['id'].'&a=edit#forms'
+    : null;
+ $form_return_query = $form_return
+    ? '&return='.urlencode($form_return)
+    : '';
+ ?>
+ <div class="well" style="margin:0 0 15px">
+    <label>
+        <input type="checkbox" name="client-multistep" value="1"
+            <?php if (!empty($info['client-multistep'])) echo 'checked="checked"'; ?>>
+        <strong><?php echo __('Use a multi-step customer ticket form'); ?></strong>
+    </label>
+    <div class="faded" style="margin:6px 0 0 24px">
+        <?php echo __('Each enabled form below becomes a step. Drag forms to set the order customers will see.'); ?>
+    </div>
+ </div>
  <table id="topic-forms" class="table" border="0" cellspacing="0" cellpadding="2">
 
 <?php
@@ -361,6 +379,11 @@ foreach ($forms as $F) {
             <td class="handle" colspan="6">
                 <input type="hidden" name="forms[]" value="<?php echo $F->get('id'); ?>" />
                 <div class="pull-right">
+                <a class="action-button" href="forms.php?id=<?php
+                    echo (int) $F->get('id');
+                    echo Format::htmlchars($form_return_query); ?>" title="<?php echo __('Edit this form'); ?>">
+                    <i class="icon-edit"></i> <?php echo __('Edit Form'); ?>
+                </a>
                 <i class="icon-large icon-move icon-muted"></i>
 <?php if ($F->get('type') != 'T') { ?>
                 <a href="#" title="<?php echo __('Delete'); ?>" onclick="javascript:
@@ -401,6 +424,7 @@ foreach ($forms as $F) {
  </table>
 
    <br/>
+   <div class="topic-form-actions">
    <strong><?php echo __('Add Custom Form'); ?></strong>:
    <select name="form_id" id="newform">
     <option value=""><?php echo '— '.__('Add a custom form') . ' —'; ?></option>
@@ -419,6 +443,11 @@ foreach ($forms as $F) {
    </select>
    &nbsp;<span class="error">&nbsp;<?php echo $errors['form_id']; ?></span>
    <i class="help-tip icon-question-sign" href="#custom_form"></i>
+   <a class="green button action-button" href="forms.php?a=add<?php
+       echo Format::htmlchars($form_return_query); ?>">
+       <i class="icon-plus-sign"></i> <?php echo __('Create New Form'); ?>
+   </a>
+   </div>
 </div>
 
 </div>

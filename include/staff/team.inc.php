@@ -120,6 +120,25 @@ $info = $team->getInfo();
         </tr>
     </tbody>
 </table>
+<?php if ($team->getId()) { ?>
+<div class="team-routing-summary">
+    <h3><?php echo __('Routing Skills'); ?></h3>
+    <p class="faded"><?php echo __('Help topics routed to this team act as its support skills.'); ?></p>
+    <div>
+<?php
+$routingTopics = $team->getRoutingTopics();
+if ($routingTopics->count()) {
+    foreach ($routingTopics as $routingTopic) { ?>
+        <span class="team-skill"><?php echo Format::htmlchars($routingTopic->getFullName()); ?></span>
+<?php }
+} else { ?>
+        <span class="faded"><?php echo __('No help topics route to this team yet.'); ?></span>
+<?php } ?>
+    </div>
+    <p><a href="helptopics.php"><i class="icon-cog"></i>
+        <?php echo __('Manage Help Topic Routing'); ?></a></p>
+</div>
+<?php } ?>
 </div>
 
 <?php

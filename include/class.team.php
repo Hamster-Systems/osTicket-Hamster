@@ -79,6 +79,25 @@ implements TemplateVariable {
         return $this->members->count();
     }
 
+    function getRoutingTopics() {
+        require_once INCLUDE_DIR . 'class.topic.php';
+        return Topic::objects()
+            ->filter(array('team_id' => $this->getId()))
+            ->order_by('topic');
+    }
+
+    function getNumRoutingTopics() {
+        return $this->getRoutingTopics()->count();
+    }
+
+    function getNumOpenTickets() {
+        require_once INCLUDE_DIR . 'class.ticket.php';
+        return Ticket::objects()->filter(array(
+            'team_id' => $this->getId(),
+            'status__state' => 'open',
+        ))->count();
+    }
+
     function getMembers() {
         if (!isset($this->_members)) {
             $this->_members = array();

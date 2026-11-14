@@ -2,6 +2,13 @@
 require('admin.inc.php');
 require_once(INCLUDE_DIR."/class.dynamic_forms.php");
 
+$return_url = null;
+if (!empty($_REQUEST['return'])
+        && preg_match('/^helptopics\.php\?id=\d+&a=edit#forms$/',
+            $_REQUEST['return'])) {
+    $return_url = $_REQUEST['return'];
+}
+
 $form=null;
 if($_REQUEST['id'] && !($form=DynamicForm::lookup($_REQUEST['id'])))
     $errors['err']=sprintf(__('%s: Unknown or invalid ID.'), __('custom form'));

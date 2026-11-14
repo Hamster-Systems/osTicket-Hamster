@@ -28,10 +28,14 @@ if($form && $_REQUEST['a']!='add') {
     $submit_text=__('Add Form');
     $newcount=4;
 }
+$return_query = $return_url
+    ? '&return='.urlencode($return_url)
+    : '';
+$url .= $return_query;
 $info=Format::htmlchars(($errors && $_POST)?$_POST:$info, true);
 
 ?>
-<form class="manage-form" action="<?php echo $url ?>" method="post" class="save">
+<form class="manage-form" action="<?php echo Format::htmlchars($url); ?>" method="post">
     <?php csrf_token(); ?>
     <input type="hidden" name="do" value="<?php echo $action; ?>">
     <input type="hidden" name="a" value="<?php echo $action; ?>">
@@ -295,7 +299,13 @@ if ($form && count($langs) > 1) { ?>
 <p class="centered">
     <input type="submit" name="submit" value="<?php echo $submit_text; ?>">
     <input type="reset"  name="reset"  value="<?php echo __('Reset'); ?>">
+    <?php if ($return_url) { ?>
+    <a class="button action-button" href="<?php
+        echo Format::htmlchars($return_url); ?>"><i class="icon-arrow-left"></i>
+        <?php echo __('Back to Help Topic'); ?></a>
+    <?php } else { ?>
     <input type="button" name="cancel" value="<?php echo __('Cancel'); ?>" onclick='window.location.href="?"'>
+    <?php } ?>
 </p>
 
 <div style="display:none;" class="draggable dialog" id="delete-confirm">

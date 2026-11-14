@@ -243,7 +243,38 @@ implements TemplateVariable, Searchable {
             if ($this->check($flag))
                 $base[$ck] = true;
         }
+        $settings = $this->getGroupSettings();
+        $base['support_tier'] = $settings['support_tier'];
+        $base['sla_id'] = $settings['sla_id'];
         return $base;
+    }
+
+    function getGroupSettings() {
+        $settings = JsonDataParser::decode($this->extra) ?: array();
+        return array(
+            'support_tier' => $settings['support_tier'] ?: 'standard',
+            'sla_id' => (int) ($settings['sla_id'] ?: 0),
+        );
+    }
+
+    function getSupportTier() {
+        $settings = $this->getGroupSettings();
+        return $settings['support_tier'];
+    }
+
+    function getSupportTierLabel() {
+        $labels = array(
+            'standard' => __('Standard'),
+            'priority' => __('Priority'),
+            'premium' => __('Premium'),
+            'internal' => __('Internal'),
+        );
+        return $labels[$this->getSupportTier()] ?: $labels['standard'];
+    }
+
+    function getGroupSLAId() {
+        $settings = $this->getGroupSettings();
+        return $settings['sla_id'];
     }
 
     function isMappedToDomain($domain) {
@@ -384,6 +415,11 @@ implements TemplateVariable, Searchable {
     }
 
     function updateProfile($vars, &$errors) {
+        $tiers = array('standard', 'priority', 'premium', 'internal');
+        if (!in_array($vars['support_tier'], $tiers))
+            $errors['support_tier'] = __('Select a valid support tier');
+        if ($vars['sla_id'] && !SLA::lookup($vars['sla_id']))
+            $errors['sla_id'] = __('Select a valid SLA plan');
         if ($vars['domain']) {
             foreach (explode(',', $vars['domain']) as $d) {
                 if (!Validator::is_email('t@' . trim($d))) {
@@ -412,6 +448,11 @@ implements TemplateVariable, Searchable {
 
         if ($errors)
             return false;
+
+        $extra = JsonDataParser::decode($this->extra) ?: array();
+        $extra['support_tier'] = $vars['support_tier'] ?: 'standard';
+        $extra['sla_id'] = (int) ($vars['sla_id'] ?: 0);
+        $this->extra = JsonDataEncoder::encode($extra);
 
         return $this->save();
     }

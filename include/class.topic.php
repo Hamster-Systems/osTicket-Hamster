@@ -69,6 +69,7 @@ implements TemplateVariable, Searchable {
     const FLAG_CUSTOM_NUMBERS = 0x0001;
     const FLAG_ACTIVE = 0x0002;
     const FLAG_ARCHIVED = 0x0004;
+    const FLAG_CLIENT_MULTISTEP = 0x0008;
 
     const SORT_ALPHA = 'a';
     const SORT_MANUAL = 'm';
@@ -219,12 +220,17 @@ implements TemplateVariable, Searchable {
     function getInfo() {
         $base = $this->getHashtable();
         $base['custom-numbers'] = $this->hasFlag(self::FLAG_CUSTOM_NUMBERS);
+        $base['client-multistep'] = $this->hasFlag(self::FLAG_CLIENT_MULTISTEP);
         $base['status'] = $this->getStatus();
         return $base;
     }
 
+    function usesClientMultiStep() {
+        return $this->hasFlag(self::FLAG_CLIENT_MULTISTEP);
+    }
+
     function hasFlag($flag) {
-        return $this->flags & $flag != 0;
+        return (($this->flags & $flag) != 0);
     }
 
     function getNewTicketNumber() {
@@ -485,6 +491,8 @@ implements TemplateVariable, Searchable {
         $this->sequence_id = $vars['custom-numbers'] ? $vars['sequence_id'] : 0;
         $this->number_format = $vars['number_format'];
         $this->setFlag(self::FLAG_CUSTOM_NUMBERS, ($vars['custom-numbers']));
+        $this->setFlag(self::FLAG_CLIENT_MULTISTEP,
+            !empty($vars['client-multistep']));
         $this->noautoresp = $vars['noautoresp'];
         $this->notes = Format::sanitize($vars['notes']);
 

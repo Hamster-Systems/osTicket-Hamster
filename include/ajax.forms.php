@@ -44,6 +44,7 @@ class DynamicFormsAjaxAPI extends AjaxController {
         return $this->encode(array(
             'media' => $media,
             'html' => $html,
+            'multistep' => $client && $topic->usesClientMultiStep(),
         ));
     }
 

@@ -3777,3 +3777,7 @@ img.avatar + img.avatar {
     height: auto;
     max-height: 400px !important;
 }
+.customer-tier,.team-skill{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#e9eef5;color:#344054;font-size:11px;font-weight:700;line-height:1.6}
+.customer-tier-priority{background:#fff3d6;color:#8a5700}.customer-tier-premium{background:#e8efff;color:#194fa8}.customer-tier-internal{background:#e8f7ef;color:#176743}
+.team-routing-summary{margin:16px 0;padding:14px 16px;border:1px solid #d9dfe7;border-radius:6px;background:#f8fafc}.team-routing-summary h3{margin:0 0 4px}.team-skill{margin:3px}.team-metric,.team-workload{display:inline-block;min-width:24px;padding:3px 7px;border-radius:10px;background:#e8efff;text-align:center;font-weight:700}
+.team-unavailable{display:inline-block;padding:2px 7px;border-radius:999px;background:#fff3d6;color:#8a5700;font-weight:700}

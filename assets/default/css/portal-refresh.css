@@ -412,3 +412,29 @@ html[data-theme=dark] #ticketInfo .status-action-reopen{color:#86e7c2!important}
 @media(max-width:700px){.ticket-status-action{margin:0 6px 0 0}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 @media(forced-colors:active){.ticket-status{border:1px solid ButtonText}.status-dot{forced-color-adjust:none}}
+
+/* Multi-step ticket creation */
+.ticket-wizard{margin:0 0 24px}
+.ticket-wizard-progress{display:flex;align-items:flex-start;gap:0;margin:0;padding:0;list-style:none;counter-reset:wizard-step}
+.ticket-wizard-progress li{position:relative;flex:1;min-width:0;color:var(--muted);font-size:.78rem;font-weight:700;text-align:center}
+.ticket-wizard-progress li:before{counter-increment:wizard-step;content:counter(wizard-step);position:relative;z-index:2;display:grid;place-items:center;width:34px;height:34px;margin:0 auto 7px;border:2px solid #cfd7e3;border-radius:50%;background:#fff;color:#667085}
+.ticket-wizard-progress li:after{content:"";position:absolute;z-index:1;top:16px;left:-50%;width:100%;height:2px;background:#dce2ea}
+.ticket-wizard-progress li:first-child:after{display:none}
+.ticket-wizard-progress li.is-active:before,.ticket-wizard-progress li.is-complete:before{border-color:var(--brand);background:var(--brand);color:#fff}
+.ticket-wizard-progress li.is-complete:after,.ticket-wizard-progress li.is-active:after{background:var(--brand)}
+.ticket-wizard-progress li.is-active{color:var(--ink)}
+#ticketForm.is-wizard [data-wizard-step][hidden]{display:none!important}
+#ticketForm .wizard-actions{display:flex;justify-content:flex-end;gap:10px}
+#ticketForm .wizard-back,#ticketForm .wizard-next{min-width:120px}
+#ticketForm .wizard-next{background:var(--brand)!important;border-color:var(--brand)!important;color:#fff!important}
+.wizard-step-heading{margin:2px 0 18px;color:var(--ink);font-size:1.18rem}
+html[data-theme=dark] .ticket-wizard-progress li:before{background:#18212d;border-color:#46546a;color:#b7c4d5}
+html[data-theme=dark] .ticket-wizard-progress li.is-active:before,html[data-theme=dark] .ticket-wizard-progress li.is-complete:before{background:#397af0;border-color:#397af0;color:#fff}
+html[data-theme=dark] .ticket-wizard-progress li:after{background:#344052}
+html[data-theme=dark] .ticket-wizard-progress li.is-complete:after,html[data-theme=dark] .ticket-wizard-progress li.is-active:after{background:#397af0}
+@media(max-width:600px){.ticket-wizard-progress li span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}.ticket-wizard-progress li:before{width:30px;height:30px}.ticket-wizard-progress li:after{top:14px}.wizard-actions{display:grid!important;grid-template-columns:1fr 1fr}.wizard-actions .wizard-next:only-child{grid-column:2}}
+
+/* Customer group plan */
+.portal-support-plan{display:inline-flex;align-items:center;gap:6px;margin-left:10px;padding:5px 9px;border:1px solid rgba(31,93,202,.18);border-radius:999px;background:rgba(255,255,255,.65);color:#344054;font-size:.76rem}.portal-support-plan strong{color:var(--brand)}
+html[data-theme=dark] .portal-support-plan{background:rgba(16,23,32,.45);border-color:#46546a;color:#c6d0dd}html[data-theme=dark] .portal-support-plan strong{color:#9ec1ff}
+@media(max-width:600px){.portal-support-plan{display:flex;width:max-content;margin:9px 0 0}}

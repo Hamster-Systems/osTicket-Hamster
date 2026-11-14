@@ -42,8 +42,43 @@ if ($ticket && $ticket->getOwnerId() == $user->getId())
     <table style="width:100%">
         <tbody>
             <tr>
+                <th colspan="2"><?php echo __('Customer Group'); ?></th>
+            </tr>
+            <tr>
+                <td width="180"><?php echo __('Support Tier'); ?>:</td>
+                <td>
+                    <select name="support_tier">
+<?php foreach (array(
+    'standard' => __('Standard'),
+    'priority' => __('Priority'),
+    'premium' => __('Premium'),
+    'internal' => __('Internal'),
+) as $value => $label) { ?>
+                        <option value="<?php echo $value; ?>" <?php
+                            echo $info['support_tier'] == $value ? 'selected="selected"' : ''; ?>><?php
+                            echo $label; ?></option>
+<?php } ?>
+                    </select>
+                    <span class="error"><?php echo $errors['support_tier']; ?></span>
+                </td>
+            </tr>
+            <tr>
+                <td width="180"><?php echo __('Default SLA'); ?>:</td>
+                <td>
+                    <select name="sla_id">
+                        <option value="0">&mdash; <?php echo __('System or Help Topic Default'); ?> &mdash;</option>
+<?php foreach (SLA::getSLAs() ?: array() as $id => $name) { ?>
+                        <option value="<?php echo (int) $id; ?>" <?php
+                            echo $info['sla_id'] == $id ? 'selected="selected"' : ''; ?>><?php
+                            echo Format::htmlchars($name); ?></option>
+<?php } ?>
+                    </select>
+                    <span class="error"><?php echo $errors['sla_id']; ?></span>
+                </td>
+            </tr>
+            <tr>
                 <td width="180">
-                    <?php echo __('Account Manager'); ?>:
+                    <?php echo __('Routing Agent or Team'); ?>:
                 </td>
                 <td>
                     <select name="manager">
@@ -82,7 +117,7 @@ if ($ticket && $ticket->getOwnerId() == $user->getId())
                 <td>
                     <input type="checkbox" name="assign-am-flag" value="1" <?php echo $info['assign-am-flag']?'checked="checked"':''; ?>>
                     <?php echo __(
-                    'Assign tickets from this organization to the <em>Account Manager</em>'); ?>
+                    'Route tickets from this customer group to the selected agent or team'); ?>
             </tr>
             <tr>
                 <td width="180">
@@ -169,7 +204,7 @@ if ($ticket && $ticket->getOwnerId() == $user->getId())
 echo $account ? 'cancel' : 'close'; ?>"  value="<?php echo __('Cancel'); ?>">
     </span>
     <span class="buttons pull-right">
-        <input type="submit" value="<?php echo __('Update Organization'); ?>">
+        <input type="submit" value="<?php echo __('Update Customer Group'); ?>">
     </span>
 </p>
 </form>

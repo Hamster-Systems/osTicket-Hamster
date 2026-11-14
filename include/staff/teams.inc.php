@@ -85,8 +85,9 @@ $qstr .= '&amp;order='.urlencode($order=='DESC' ? 'ASC' : 'DESC');
             <th width="8%"><a  <?php echo $status_sort; ?> href="teams.php?<?php echo $qstr; ?>&sort=status"><?php echo __('Status');?></a></th>
             <th width="8%"><a  <?php echo $members_sort; ?>href="teams.php?<?php echo $qstr; ?>&sort=members"><?php echo __('Members');?></a></th>
             <th width="20%"><a  <?php echo $lead_sort; ?> href="teams.php?<?php echo $qstr; ?>&sort=lead"><?php echo __('Team Lead');?></a></th>
-            <th width="15%"><a  <?php echo $created_sort; ?> href="teams.php?<?php echo $qstr; ?>&sort=created"><?php echo __('Created');?></a></th>
-            <th width="20%"><a  <?php echo $updated_sort; ?> href="teams.php?<?php echo $qstr; ?>&sort=updated"><?php echo __('Last Updated');?></a></th>
+            <th width="10%"><?php echo __('Skills / Topics'); ?></th>
+            <th width="10%"><?php echo __('Open Work'); ?></th>
+            <th width="15%"><a  <?php echo $updated_sort; ?> href="teams.php?<?php echo $qstr; ?>&sort=updated"><?php echo __('Last Updated');?></a></th>
         </tr>
     </thead>
     <tbody>
@@ -116,7 +117,13 @@ $qstr .= '&amp;order='.urlencode($order=='DESC' ? 'ASC' : 'DESC');
                             <?php echo $sel ? 'checked="checked"' : ''; ?>> </td>
                 <td><a href="teams.php?id=<?php echo $id; ?>"><?php echo
                 $team->getName(); ?></a> &nbsp;</td>
-                <td>&nbsp;<?php echo $team->isActive() ? __('Active') : '<b>'.__('Disabled').'</b>'; ?></td>
+                <td>&nbsp;<?php
+                    if (!$team->isActive())
+                        echo '<b>'.__('Disabled').'</b>';
+                    elseif (!$team->getNumMembers())
+                        echo '<span class="team-unavailable">'.__('Unavailable').'</span>';
+                    else
+                        echo __('Active'); ?></td>
                 <td style="text-align:right;padding-right:25px">&nbsp;&nbsp;
                     <?php if ($team->members_count > 0) { ?>
                         <a href="staff.php?tid=<?php echo $id; ?>"><?php
@@ -127,7 +134,10 @@ $qstr .= '&amp;order='.urlencode($order=='DESC' ? 'ASC' : 'DESC');
                 </td>
                 <td><a href="staff.php?id=<?php
                     echo $team->getLeadId(); ?>"><?php echo $team->lead ?: ''; ?>&nbsp;</a></td>
-                <td><?php echo Format::date($team->created); ?>&nbsp;</td>
+                <td><a href="helptopics.php" title="<?php echo __('Manage help topic routing'); ?>"><?php
+                    echo $team->getNumRoutingTopics(); ?></a></td>
+                <td><a href="tickets.php?teamid=<?php echo $id; ?>&amp;status=open"
+                    class="team-workload"><?php echo $team->getNumOpenTickets(); ?></a></td>
                 <td><?php echo Format::datetime($team->updated); ?>&nbsp;</td>
             </tr>
             <?php

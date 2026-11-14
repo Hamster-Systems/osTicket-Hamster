@@ -446,10 +446,14 @@ if($ticket->isOverdue())
                     </td>
                 </tr>
 <?php   if ($user->getOrganization()) { ?>
+                <?php $customerGroup = $user->getOrganization(); ?>
                 <tr>
-                    <th><?php echo __('Organization'); ?>:</th>
+                    <th><?php echo __('Customer Group'); ?>:</th>
                     <td><i class="icon-building"></i>
-                    <?php echo Format::htmlchars($user->getOrganization()->getName()); ?>
+                    <?php echo Format::htmlchars($customerGroup->getName()); ?>
+                    <span class="customer-tier customer-tier-<?php
+                        echo Format::htmlchars($customerGroup->getSupportTier()); ?>"><?php
+                        echo Format::htmlchars($customerGroup->getSupportTierLabel()); ?></span>
                         <a href="tickets.php?<?php echo Http::build_query(array(
                             'status'=>'open', 'a'=>'search', 'orgid'=> $user->getOrgId()
                         )); ?>" title="<?php echo __('Related Tickets'); ?>"

@@ -4342,6 +4342,12 @@ implements RestrictedAccess, Threadable, Searchable {
             elseif (!isset($vars['teamId']) && $code[0] == 't')
                 $vars['teamId'] = substr($code, 1);
         }
+        // Customer-group SLA is contractual and overrides topic/system defaults.
+        if ($org && ($groupSlaId = $org->getGroupSLAId())
+                && ($groupSla = SLA::lookup($groupSlaId))
+                && $groupSla->isActive()) {
+            $vars['slaId'] = $groupSlaId;
+        }
 
         // Last minute checks
         $priority = $form->getAnswer('priority');

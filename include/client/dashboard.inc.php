@@ -5,6 +5,8 @@ $org_tickets = $thisclient->canSeeOrgTickets();
 $dashboard_open = $thisclient->getNumOpenTickets($org_tickets);
 $dashboard_closed = $thisclient->getNumClosedTickets($org_tickets);
 $dashboard_total = $dashboard_open + $dashboard_closed;
+$dashboard_user = User::lookup($thisclient->getId());
+$dashboard_group = $dashboard_user ? $dashboard_user->getOrganization() : null;
 TicketForm::ensureDynamicDataView();
 $dashboard_recent = Ticket::objects()->filter(array("user_id" => $thisclient->getId()))->order_by("-created")->limit(5)->values("ticket_id", "number", "created", "status__state", "status__name", "cdata__subject");
 ?>
@@ -12,6 +14,13 @@ $dashboard_recent = Ticket::objects()->filter(array("user_id" => $thisclient->ge
     <header class="dashboard-welcome">
         <div>
             <span class="dashboard-eyebrow"><?php echo __('Your support dashboard'); ?></span>
+            <?php if ($dashboard_group) { ?>
+            <span class="portal-support-plan">
+                <i class="icon-building" aria-hidden="true"></i>
+                <?php echo Format::htmlchars($dashboard_group->getName()); ?>
+                <strong><?php echo Format::htmlchars($dashboard_group->getSupportTierLabel()); ?></strong>
+            </span>
+            <?php } ?>
             <h1><?php echo sprintf(__('Welcome back, %s'), Format::htmlchars($thisclient->getName())); ?></h1>
             <p><?php echo __('Track your requests, review recent updates, or start a new conversation with our support team.'); ?></p>
         </div>

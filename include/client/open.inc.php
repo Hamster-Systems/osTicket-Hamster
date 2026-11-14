@@ -18,7 +18,9 @@ if (!$info['topicId']) {
 }
 
 $forms = array();
+$clientMultiStep = false;
 if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
+    $clientMultiStep = $topic->usesClientMultiStep();
     foreach ($topic->getForms() as $F) {
         if (!$F->hasAnyVisibleFields())
             continue;
@@ -73,6 +75,8 @@ if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
                         success: function(json) {
                           $('#dynamic-form').empty().append(json.html);
                           $(document.head).append(json.media);
+                          if (window.PortalTicketWizard)
+                              window.PortalTicketWizard.refresh(!!json.multistep);
                         }
                       });">
                 <option value="" selected="selected">&mdash; <?php echo __('Select a Help Topic');?> &mdash;</option>
@@ -129,3 +133,7 @@ if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
             window.location.href='index.php';">
   </p>
 </form>
+<script>
+window.portalTicketWizardEnabled = <?php echo $clientMultiStep ? 'true' : 'false'; ?>;
+</script>
+<script src="<?php echo ROOT_PATH; ?>js/portal-ticket-wizard.js?v=1"></script>
