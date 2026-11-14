@@ -12,7 +12,7 @@
 
 ---
 
-> [!IMPORTANT]
+> [!NOTE]
 > **INFORMATION — HAMSTER SYSTEMS NETWORK BUILD**
 >
 > This distribution is **designed and modified specifically to suit Hamster Systems and its network**, including its support operations, internal processes and associated services. It is a separately maintained customisation of **osTicket**, not an official upstream osTicket release.
